@@ -1,4 +1,4 @@
-import getCollection from "@/db";
+import getCollection from "@/lib/db";
 import { LinkDoc } from "../types";
 
 export default async function getLinkByAlias(alias: string): Promise<string | null> {

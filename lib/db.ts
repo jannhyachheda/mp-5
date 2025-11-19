@@ -3,11 +3,17 @@ import { MongoClient, Collection } from "mongodb";
 const uri = process.env.MONGO_URI!;
 const DB_NAME = "shortenerDatabase";
 
+if (!uri) {
+    throw new Error("Please add your MONGO_URI to .env.local");
+}
+
 declare global {
+    // eslint-disable-next-line no-var
     var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-let client: MongoClient, clientPromise: Promise<MongoClient>;
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
 
 if (process.env.NODE_ENV === "development") {
     if (!global._mongoClientPromise) {
@@ -23,6 +29,6 @@ if (process.env.NODE_ENV === "development") {
 export default async function getCollection<T = any>(
     name: string
 ): Promise<Collection<T>> {
-    const client = await clientPromise;
-    return client.db(DB_NAME).collection<T>(name);
+    const connectedClient = await clientPromise;
+    return connectedClient.db(DB_NAME).collection<T>(name);
 }
