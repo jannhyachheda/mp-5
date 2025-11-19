@@ -1,27 +1,28 @@
-import { MongoClient, Db, Collection } from 'mongodb';
+import { MongoClient, Collection } from "mongodb";
 
-const CONNECTION_STRING = process.env.DB_CONN_STRING as string;
-if (!CONNECTION_STRING) {
-    throw new Error("Database connection string is missing.");
+const uri = process.env.MONGO_URI!;
+const DB_NAME = "shortenerDatabase";
+
+declare global {
+    var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-const DATABASE_LABEL = "shortenerDatabase";
-export const LINK_COLLECTION = "shortenedLinks";
+let client: MongoClient, clientPromise: Promise<MongoClient>;
 
-let mongoClient: MongoClient | null = null;
-let mongoDb: Db | null = null;
-
-async function establishConnection(): Promise<Db> {
-    if (!mongoClient) {
-        mongoClient = new MongoClient(CONNECTION_STRING);
-        await mongoClient.connect();
+if (process.env.NODE_ENV === "development") {
+    if (!global._mongoClientPromise) {
+        client = new MongoClient(uri);
+        global._mongoClientPromise = client.connect();
     }
-    return mongoClient.db(DATABASE_LABEL);
+    clientPromise = global._mongoClientPromise;
+} else {
+    client = new MongoClient(uri);
+    clientPromise = client.connect();
 }
 
-export async function accessCollection(collection: string): Promise<Collection> {
-    if (!mongoDb) {
-        mongoDb = await establishConnection();
-    }
-    return mongoDb.collection(collection);
+export default async function getCollection<T = any>(
+    name: string
+): Promise<Collection<T>> {
+    const client = await clientPromise;
+    return client.db(DB_NAME).collection<T>(name);
 }

@@ -1,27 +1,15 @@
-import type { Metadata } from 'next';
-import NavBar from '../components/Header';
-
-export const metadata: Metadata = {
-    title: "ShortLinker - CS391",
-    description: "Create and manage custom short links with ease.",
-};
-
-export default function AppShell({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-        <head>
-            <meta charSet="UTF-8" />
-            <meta name="viewport" content="width=device-width,initial-scale=1" />
-        </head>
+        <head />
         <body style={{
-            minHeight: '100vh',
-            background: 'linear-gradient(180deg, #baf3fc 0%, #fcfcfc 100%)',
-            fontFamily: 'Segoe UI, Roboto, Arial, sans-serif'
+            margin: 0,
+            padding: 0,
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            backgroundColor: '#d4f4e7',
+            minHeight: '100vh'
         }}>
-        <NavBar />
-        <main style={{ paddingTop: '2rem', minHeight: 'calc(100vh - 80px)' }}>
-            {children}
-        </main>
+        {children}
         </body>
         </html>
     );
