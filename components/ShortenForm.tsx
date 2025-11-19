@@ -16,14 +16,21 @@ export default function ShortenForm() {
         setResult("");
         setCopied(false);
         setLoading(true);
-        const res = await createAlias(alias.trim(), url.trim());
-        setLoading(false);
-        if (res.success && res.data) {
-            setResult(`${window.location.origin}/${res.data.alias}`);
-            setUrl("");
-            setAlias("");
-        } else {
-            setError(res.message);
+
+        try {
+            const res = await createAlias(alias.trim(), url.trim());
+            setLoading(false);
+
+            if (res.success && res.data) {
+                setResult(`${window.location.origin}/${res.data.alias}`);
+                setUrl("");
+                setAlias("");
+            } else {
+                setError(res.message);
+            }
+        } catch (err) {
+            setLoading(false);
+            setError("Something went wrong");
         }
     };
 
@@ -60,8 +67,7 @@ export default function ShortenForm() {
                             borderRadius: '0.5rem',
                             padding: '0.75rem 1rem',
                             fontSize: '1rem',
-                            outline: 'none',
-                            transition: 'all 0.2s'
+                            outline: 'none'
                         }}
                     />
                 </div>
@@ -70,21 +76,8 @@ export default function ShortenForm() {
                     <label htmlFor="alias" style={{ fontSize: '0.875rem', fontWeight: '600', color: '#111827', marginBottom: '0.5rem' }}>
                         Custom Alias
                     </label>
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        border: '1px solid #d1d5db',
-                        borderRadius: '0.5rem',
-                        overflow: 'hidden'
-                    }}>
-            <span style={{
-                padding: '0.75rem',
-                background: '#f9fafb',
-                borderRight: '1px solid #d1d5db',
-                fontSize: '0.875rem',
-                color: '#6b7280',
-                whiteSpace: 'nowrap'
-            }}>
+                    <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #d1d5db', borderRadius: '0.5rem', overflow: 'hidden' }}>
+            <span style={{ padding: '0.75rem', background: '#f9fafb', borderRight: '1px solid #d1d5db', fontSize: '0.875rem', color: '#6b7280', whiteSpace: 'nowrap' }}>
               {typeof window !== "undefined" ? `${window.location.origin}/` : ""}
             </span>
                         <input
@@ -94,27 +87,13 @@ export default function ShortenForm() {
                             onChange={(e) => setAlias(e.target.value)}
                             placeholder="your-custom-alias"
                             required
-                            style={{
-                                flex: 1,
-                                border: 'none',
-                                padding: '0.75rem',
-                                fontSize: '1rem',
-                                outline: 'none'
-                            }}
+                            style={{ flex: 1, border: 'none', padding: '0.75rem', fontSize: '1rem', outline: 'none' }}
                         />
                     </div>
                 </div>
 
                 {error && (
-                    <div style={{
-                        background: '#fef2f2',
-                        border: '1px solid #fecaca',
-                        color: '#991b1b',
-                        padding: '0.75rem 1rem',
-                        borderRadius: '0.5rem',
-                        textAlign: 'center',
-                        fontWeight: '500'
-                    }}>
+                    <div style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', padding: '0.75rem 1rem', borderRadius: '0.5rem', textAlign: 'center', fontWeight: '500' }}>
                         {error}
                     </div>
                 )}
@@ -132,8 +111,7 @@ export default function ShortenForm() {
                         border: 'none',
                         fontSize: '1rem',
                         cursor: loading ? 'not-allowed' : 'pointer',
-                        opacity: loading ? 0.5 : 1,
-                        transition: 'all 0.2s'
+                        opacity: loading ? 0.5 : 1
                     }}
                 >
                     {loading ? "Shortening..." : "Shorten"}
@@ -141,13 +119,7 @@ export default function ShortenForm() {
             </form>
 
             {result && (
-                <div style={{
-                    marginTop: '1.5rem',
-                    background: '#f9fafb',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '0.5rem',
-                    padding: '1rem'
-                }}>
+                <div style={{ marginTop: '1.5rem', background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '0.5rem', padding: '1rem' }}>
                     <p style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500', margin: '0 0 0.75rem 0' }}>
                         Your shortened URL:
                     </p>
@@ -156,30 +128,11 @@ export default function ShortenForm() {
                             type="text"
                             value={result}
                             readOnly
-                            style={{
-                                flex: 1,
-                                background: 'white',
-                                border: '1px solid #d1d5db',
-                                borderRadius: '0.5rem',
-                                padding: '0.5rem 0.75rem',
-                                fontSize: '0.875rem',
-                                fontFamily: 'monospace',
-                                textAlign: 'center'
-                            }}
+                            style={{ flex: 1, background: 'white', border: '1px solid #d1d5db', borderRadius: '0.5rem', padding: '0.5rem 0.75rem', fontSize: '0.875rem', fontFamily: 'monospace', textAlign: 'center' }}
                         />
                         <button
                             onClick={handleCopy}
-                            style={{
-                                background: '#374151',
-                                color: 'white',
-                                padding: '0.5rem 1rem',
-                                borderRadius: '0.5rem',
-                                border: 'none',
-                                fontSize: '0.875rem',
-                                fontWeight: '500',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s'
-                            }}
+                            style={{ background: '#374151', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', border: 'none', fontSize: '0.875rem', fontWeight: '500', cursor: 'pointer' }}
                         >
                             {copied ? "Copied!" : "Copy"}
                         </button>
