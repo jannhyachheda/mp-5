@@ -1,40 +1,16 @@
-import HomeContent from '../components/HomeContent';
-import addShortenedUrl from '../Lib/addShortenedUrl';
+import HomeContent from "../components/HomeContent";
 
-export default async function HomePage({ searchParams }: { searchParams: any }) {
-    let message = '';
-    let shortLink = '';
-
-    if (searchParams?.url) {
-        try {
-            const result = await addShortenedUrl({
-                url: searchParams.url,
-                alias: searchParams.alias,
-            });
-
-            console.log({
-                searchParams,
-                resultFromAddShortenedUrl: result,
-                message,
-                shortLink
-            });
-
-            if (typeof result === 'string' && result.startsWith('http')) {
-                shortLink = result;
-                message = "Shortened link created!";
-            } else {
-                message = result || "Error creating short link.";
-            }
-        } catch (err) {
-            message = "Unexpected error! Try again.";
-            console.log('Error in addShortenedUrl:', err);
-        }
-    }
-
+export default function HomePage() {
     return (
-        <main>
-            <h1>Welcome to ShortLinker!</h1>
-            <HomeContent message={message} shortLink={shortLink} />
+        <main style={{
+            minHeight: "100vh", background: "linear-gradient(120deg, #e3f4fc, #fafcfb)", padding: "2.5rem"
+        }}>
+            <h1 style={{
+                color: "#295a6d", letterSpacing: 2, fontSize: "2.2rem", textAlign: "center", marginBottom: 28
+            }}>
+                CS391 URL Shortener
+            </h1>
+            <HomeContent />
         </main>
     );
 }
