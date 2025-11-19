@@ -83,9 +83,9 @@ export default function ShortenForm() {
                 borderRight: '1px solid #d1d5db',
                 fontSize: '0.875rem',
                 color: '#6b7280',
-                userSelect: 'none'
+                whiteSpace: 'nowrap'
             }}>
-              {typeof window !== "undefined" ? window.location.origin + "/" : "https://your-app/"}
+              {typeof window !== "undefined" ? `${window.location.origin}/` : ""}
             </span>
                         <input
                             id="alias"
@@ -124,7 +124,7 @@ export default function ShortenForm() {
                     disabled={loading}
                     style={{
                         width: '100%',
-                        background: loading ? '#10b981' : '#10b981',
+                        background: '#10b981',
                         color: 'white',
                         fontWeight: 'bold',
                         padding: '0.75rem',
