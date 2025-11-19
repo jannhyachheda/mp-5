@@ -1,4 +1,4 @@
-import { MongoClient, Collection } from "mongodb";
+import { MongoClient, Collection, Document } from "mongodb";
 
 const uri = process.env.MONGO_URI!;
 const DB_NAME = "shortenerDatabase";
@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === "development") {
     clientPromise = client.connect();
 }
 
-export default async function getCollection<T = any>(
+export default async function getCollection<T extends Document = Document>(
     name: string
 ): Promise<Collection<T>> {
     const connectedClient = await clientPromise;
